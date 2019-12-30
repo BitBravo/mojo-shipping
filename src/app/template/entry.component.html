@@ -1,0 +1,18 @@
+<div class="error" *ngIf="isError">
+  <div class="error-code m-b-10 m-t-20">404 <i class="fa fa-warning"></i></div>
+  <h3 class="font-bold">Vendor Not Found !!</h3>
+
+  <div class="error-desc">
+    Sorry, but the page you are looking for was either not found or does not exist.
+    <div>
+    </div>
+  </div>
+</div>
+
+<span *ngIf="isOffline">
+  <div class="offline_msg" (click)="loadVendorLocations()">You are Offline. Click here to try again when Online.
+      <i style=" vertical-align: middle;" class="fa fa-cloud-download fa-2x" aria-hidden="true"></i>
+      <span class="sr-only">You are Offline. Click here to try again when Online.</span>
+  </div>
+</span> 
+<app-loading *ngIf="loading"></app-loading>

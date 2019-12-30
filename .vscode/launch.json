@@ -1,0 +1,61 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "protocol": "legacy",
+            "name": "Launch As Kiosk",
+            "sourceMaps": true,
+            "url": "http://localhost:4200/?vendor=bsRVuG43QK&kiosk=X",
+            "webRoot": "${workspaceRoot}",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome",
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${webRoot}/node_modules/*",       // Example: "webpack:///./~/querystring/index.js" -> "/Users/me/project/node_modules/querystring/index.js"
+                "webpack:///./*":   "${webRoot}/*",                    // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",
+                "webpack:///*":     "*",                               // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
+                "webpack:///src/*": "${webRoot}/*",                    // Example: "webpack:///src/App.js" -> "C:/project/src/App.js"
+                "meteor://💻app/*": "${webRoot}/*"                    // Example: "meteor://💻app/main.ts" -> "c:/code/main.ts"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "protocol": "legacy",
+            "sourceMaps": true,
+            "name": "Launch as View Menu",
+            "url": "http://localhost:4200/?vendor=bsRVuG43QK&viewMenu=true",
+            "webRoot": "${workspaceRoot}",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "protocol": "legacy",
+            "sourceMaps": true,
+            "name": "Launch As Web Ordering",
+            // "url": "http://localhost:4200/?vendor=ZXUATm5S5M",
+            "url": "http://localhost:4200/?vendor=bsRVuG43QK",
+            "webRoot": "${workspaceRoot}",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "protocol": "legacy",
+            "sourceMaps": true,
+            "name": "TSYS Web Ordering",
+            "url": "http://localhost:4200/?vendor=gANPZ2Msbp",
+            "webRoot": "${workspaceRoot}",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "webRoot": "${workspaceRoot}"
+        }
+    ]
+}

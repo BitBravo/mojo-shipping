@@ -1,0 +1,242 @@
+<div class="location-item" *ngFor="let location of locations | orderBy : 'distance' let first = first; let last = last" [ngClass]="{ first: first, last: last }">
+  <div class="list-group">
+    <a class="list-group-item">
+        <div class="col-sm-12  col-md-8 col-lg-9" (click)="onSelection(location)">
+          <div class="list-group-item-heading h4">{{location.name}}</div>
+          <p *ngIf="getStatus(location)">
+            <small
+              [ngClass]="{'tag-default':location.currentStatus=='CLOSED','tag-success':location.currentStatus=='OPEN'}"
+              class="tag tag-pill">{{getStatus(location)}}
+            </small>
+          </p>
+          <p class="list-group-item-text row">
+            <span class="col-12 custm_address">{{location.address}} </span>
+          </p>
+          <div class="row">
+            <div *ngIf="location.distance" class="col-6 custm_miles"><p class="custm_inline">{{location.distance | number : '1.0-0'}} miles</p>
+            <button *ngIf="location.distance" (click)="launchLocationMap(location)" class="btn btn-sm btn-outline-primary custm_inline ">
+                <i class="fa fa-map" aria-hidden="true"></i>&nbsp;Take me there</button>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-3">
+          <button type="button" class="btn btn-outline-primary btn-block" (click)="openPopup(location,locationSummaryModal,false)">
+            {{getButtonText(location)}}
+          </button>
+
+          <button *ngIf="location.bulkMenuHeader" type="button" class="btn btn-outline-primary btn-block"
+                  (click)="openPopup(location,locationSummaryModal,true)">
+            {{getCateringButtonText(location)}}
+          </button>
+        </div>
+    </a>
+  </div>
+</div>
+
+<ng-template #orderTimeOut let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Sorry. Looks like you took too long...</h4>
+    </div>
+    <div class="modal-body">
+      <p>The time you have selected has expired. Please select a new time.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-primary" (click)="c('Close click')">OK</button>
+    </div>
+  </ng-template>
+  
+ 
+ 
+<ng-template ngbModalContainer></ng-template>
+<div class="main_custm_inner">
+<ng-template #locationSummaryModal let-c="close" let-a="dismiss">
+  <app-loading *ngIf="loading"></app-loading>
+  <div class="outer_popup">
+  <div class="modal-header mobile_modal_header" id="pickupTimePopupHeader">
+    <h3 class="modal-title center custm-center">{{selectedLocation.name}}</h3>
+  </div>
+  <ngb-tabset [activeId]="activeTabId" (tabChange)="onOrderTypeTabChange($event,activeTabId)" #activeTabId>
+    <ngb-tab title="Order Pickup" id="pickup">
+      <ng-template ngbTabContent>
+  <div class="modal-body center" id="pickupTimePopupBody">
+      <perfect-scrollbar class="model_body_box-container pickupTimePopupBody_inner">
+      <div class="custm_modal-body-inner">
+    <!-- <h4>{{selectedLocation.name}}</h4> -->
+    <div *ngIf="timeInterval.length == 0 && hideShowDiv==false" class="alert alert-info col-12">
+      Looks like we are not open on this day. <br>Please select another date.
+    </div>
+  
+    <form class="form-inline">
+      <div class="form-group custm-margin">
+        <div class="input-group custm_date-inner">
+          <input class="form-control" name="dp" [(ngModel)]="model"
+                 ngbDatepicker
+                 #d="ngbDatepicker" (ngModelChange)="onDateSelected(true)" readonly>
+          <div class="input-group-addon" (click)="d.toggle()">
+            <img src="assets/img/calendar-icon.svg"
+                 style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+          </div>
+        </div>
+        <div *ngIf="selectedTime" class="d-inline-block custm_dropdown-menu" ngbDropdown #myDrop="ngbDropdown">
+          <button class="btn btn-outline-primary cust-time" id="dropdownMenu" ngbDropdownToggle>
+            {{selectedTime}}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+            <div *ngFor="let time of timeInterval">
+              <button class="dropdown-item" (click)="onTimeSelection(time);myDrop.close()">
+                {{time}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="selectedTime">
+      <!-- <p class="custm_location_name"><b>{{selectedSchedule.locationData.name}}</b></p>      -->
+      <p class="custm_location_address">{{selectedScheduleAddress}}</p>        
+      <p class="custm_location_small"><small>{{selectedScheduleDistance|number : '1.0-0'}} miles</small> </p>
+     
+   
+      <sebm-google-map scrollwheel="false" [zoom]="17" [latitude]="selectedSchedule.locationData.lat"
+                       [longitude]="selectedSchedule.locationData.lng" [disableDefaultUI]="false">
+        <sebm-google-map-marker [latitude]="selectedSchedule.locationData.lat"
+                                [longitude]="selectedSchedule.locationData.lng">
+          <sebm-google-map-info-window>
+            <!-- <strong>{{selectedSchedule.locationData.name}}</strong> -->
+          </sebm-google-map-info-window>
+        </sebm-google-map-marker>
+      </sebm-google-map>
+    </div>
+  </div>
+</perfect-scrollbar>
+</div>
+  <div class="modal-footer" id="pickupTimePopupFooter">
+    <button type="button" class="btn btn-secondary btn-cancel" (click)="a('Cancel click')">Cancel</button>
+    <button type="button" [disabled]="buttonState()" class="btn btn-outline-primary" (click)="c(true)"
+            style="margin-right:15px;">Build My Order
+    </button>
+  </div>
+      </ng-template>
+</ngb-tab>
+
+  <ngb-tab id="delivery" title="Order Delivery" *ngIf="selectedLocation.delivery.enabled">
+    <ng-template ngbTabContent>
+        <form #formCtrl="ngForm">
+          <div class="modal-body center" id="deliveryTab">
+              <perfect-scrollbar class="model_body_box-container">               
+            <div class="custm_modal-body-inner">
+              <!-- <h4>{{selectedLocation.name}}</h4> -->
+             <div *ngIf="timeInterval.length == 0" class="alert alert-info col-12">
+                Looks like delivery is not available on this day. <br>Please select another date.
+             </div>
+
+              <form class="form-inline">
+                <div class="form-group custm-margin">
+                  <div class="input-group custm_date-inner">
+                    <input class="form-control" name="dp" [(ngModel)]="model"
+                          ngbDatepicker
+                          #d="ngbDatepicker" (ngModelChange)="onDateSelected(true)" readonly>
+                    <div class="input-group-addon" (click)="d.toggle()">
+                      <img src="assets/img/calendar-icon.svg"
+                          style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedTime" class="d-inline-block custm_dropdown-menu" ngbDropdown #myDrop="ngbDropdown">
+                    <button class="btn btn-outline-primary cust-time" id="dropdownMenu" ngbDropdownToggle>
+                      {{selectedTime}}
+                    </button>
+                   <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <div *ngFor="let time of timeInterval">
+                     <button class="dropdown-item" (click)="onTimeSelection(time);myDrop.close()">
+                      {{time}}
+                     </button>
+                    </div>
+                   </div>
+                  </div>
+              </div>
+              </form>
+
+              <div class="request_delivery mobile_request_delivery row">
+
+                  <input type="text" class="form-control request_delivery_input col-12" id="name" [(ngModel)]="order.customerName" pattern="^[a-zA-Z ]*$" placeholder="Enter your name (mandatory)" name="customerName" required />
+
+                  <input type="text" class="form-control request_delivery_input col-12 col-sm-2" id="apartmentNumber" [(ngModel)]="order.apartmentNumber" placeholder="Apt/Unit" name="apartmentNumber"/>
+
+                  <input class="form-control request_delivery_input col-12 col-sm-10" type="text" [(ngModel)] = "address"
+                      [ngClass]="hasError"
+                      name="address"
+                      [options]='options' 
+                      (setAddress) = "getAddress($event)"
+                      (street_number) = 'street_number=$event'
+                      (street)= 'street=$event'
+                      (city)= 'city=$event'
+                      (state)='state=$event'
+                      (district)='district=$event'
+                      (country)='country=$event'
+                      (postal_code)='postal_code=$event'
+                      (lat)='lat=$event' 
+                      (lng)='lng=$event' 
+                      (adr_address)='adr_address=$event' 
+                      (name)='name=$event' 
+                      (place_id)='place_id=$event' 
+                      (types)='types=$event' 
+                      (url)='url=$event'  
+                      (utc_offset)='utc_offset=$event' 
+                      (vicinity)='vicinity=$event' 
+                      (photos)='photos=$event' 
+                      (airport)='airport=$event' 
+                      (CountryCodes)='CountryCodes=$event'
+                      id="autocomplete"
+                      (keyup.enter)="getAddress($event)"
+                      (blur)="getAddress($event)"
+                      ng2-google-place-autocomplete required />
+
+                <input class="form-control request_delivery_input col-12" id="mobilenumber" [ngModel]="order.customerPhone | phoneNumberPipe" [minlength]="14" [maxlength]="14" (ngModelChange)="order.customerPhone=$event" (keypress)="eventHandler($event)" placeholder="Mobile Number (mandatory)" name="mobilenumber" required />
+                      
+                <input type="text" class="form-control request_delivery_input col-12" id="additional" [(ngModel)]="order.additionalInstruction" placeholder="Additional instruction (optional)" name="additional" />
+
+              </div>             
+
+          <div class="cost_delivery" *ngIf="timeInterval.length != 0">
+            <p *ngIf="deliveryCostResponse.deliveryTotal" class="cost_delivery_text h6">Estimated Delivery Fee is {{deliveryCostResponse.deliveryTotal | currency: _gs.isoCurrency:true:'1.2-2'}}</p>
+            <p *ngIf="deliveryCostResponse.deliveryMinimumAmt" class="cost_delivery_text h6">Delivery Minimum is {{deliveryCostResponse.deliveryMinimumAmt | currency: _gs.isoCurrency:true:'1.2-2'}}</p>
+          </div>
+        
+
+          <p *ngIf="errorMessage" class="text-danger col-12 cost_delivery_error_msg">{{errorMessage}}</p>
+        </div>
+      </perfect-scrollbar> 
+      </div>
+          <div class="modal-footer" id="pickupTimePopupFooter">
+          
+            <button type="button" class="btn btn-secondary btn-cancel" (click)="a('Cancel click')">Cancel</button>
+            <button type="button" [disabled]="!formCtrl.form.valid || selectedTime == null || errorMessage" class="btn btn-outline-primary" (click)="c(false)"
+                    style="margin-right:15px;">Build My Order
+            </button>
+          </div>
+       </form>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>
+</div>
+</ng-template>
+
+<ng-template #switchDeliveryToPickupPopup let-c="close" let-a="dismiss" id="switchDeliveryToPickupPopup">
+  <div class="modal-header bg-danger">
+      <h4 class="modal-title switchDeliveryToPickupPopupTitle">Wait! Are you sure?
+      <button type="button" class="close" aria-label="Close" (click)="a('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </h4>
+    </div>
+<div class="modal-body">
+  <p>Are you sure you want to switch your order from a <br/><strong>Delivery</strong> order to a <strong>Pickup</strong> order?</p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-success" (click)="a('Cancel click')">No</button>
+  <button type="button" class="btn btn-outline-danger" (click)="c('Close')">Yes</button>
+</div>
+</ng-template> 
+
+</div>
+<app-kiosk-setting *ngIf="_gs.KIOSK"></app-kiosk-setting>

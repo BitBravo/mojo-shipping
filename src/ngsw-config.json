@@ -1,0 +1,43 @@
+{
+    "index": "/index.html",
+    "assetGroups": [{
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html"
+        ],
+        "versionedFiles": [
+          "/*.bundle.css",
+          "/*.bundle.js",
+          "/*.chunk.js"
+        ]
+      }
+    }, {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/assets/script/manifest.json"
+        ],
+        "urls": [
+            "https://fonts.googleapis.com/**"
+        ]
+      }
+    }],
+    "dataGroups": [
+      {
+        "name": "api",
+        "urls": ["/parse/functions/vendorGetInfo", "/parse/functions/deliveryCostCalculate", "/parse/functions/userLogin", "/parse/functions/generateManifest", "/parse/functions/menuItemsGetForCategory", "/parse/functions/menuGetDetail", "/parse/functions/menuOrderCreateAnon", "/parse/functions/menuOrderCalcTotals", "/parse/functions/truckScheduleGet"],
+        "cacheConfig": {
+          "strategy": "performance",
+          "maxSize": 1000,
+          "maxAge": "1h",
+          "timeout": "60s"
+        }
+      }
+    ]
+  }

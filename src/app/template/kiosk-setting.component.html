@@ -1,0 +1,40 @@
+<button type="button" class="btn btn-secondary" (click)="open(settingspopup)">Settings
+</button>
+
+<ng-template #settingspopup let-c="close" let-d="dismiss">
+  <div class="modal-header" id="settingsPopupHeader">
+    <div class="row">
+      <div class="col-xs-8">
+        <h4 class="modal-title">KIOSK Settings</h4>
+      </div>
+      <div class="col-xs-4">
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body" id="settingsPopupBody">
+    <div>
+      <label for="urlinput">Hostname</label>
+      <input type="text" class="form-control" id="urlinput" aria-describedby="urlhelp" name="url"
+             placeholder="192.168.X.X" [(ngModel)]="model.hostname">
+      <small id="urlhelp" class="form-text text-muted">hostname/IP/address of the PAX machine
+      </small>
+      <br>
+      <label for="portinput">Port Number</label>
+      <input type="number" class="form-control" id="portinput" aria-describedby="porthelp" name="port"
+             placeholder="8080" [(ngModel)]="model.port">
+      <small id="porthelp" class="form-text text-muted">port number of the PAX machine
+      </small>
+      <br>
+      <div class="checkbox">
+        <label><input type="checkbox" [(ngModel)]="model.ssl"><span
+          class="checkbox-btn"></span>SSL (secure connection)</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" id="settingsPopupFooter">
+    <button type="button" class="btn btn-secondary btn-OK" (click)="c('Close click')">OK</button>
+  </div>
+</ng-template>

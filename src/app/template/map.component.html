@@ -1,0 +1,18 @@
+<sebm-google-map scrollwheel="false" [zoom]="zoom" [latitude]="lat"
+                 [longitude]="lng">
+  <div *ngFor="let location of locations ; let i = index">
+    <sebm-google-map-marker *ngIf="location.lastLocation"
+                            [latitude]="location.lastLocation.latitude"
+                            [longitude]="location.lastLocation.longitude"
+                            [title]="location.name" [draggable]="false" [openInfoWindow]="true">
+      <sebm-google-map-info-window>
+        <strong>{{location.name}}</strong>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </div>
+  <div>
+      <sebm-google-map-marker [latitude]="latitute" [longitude]="longitute" [iconUrl]="'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'">
+      </sebm-google-map-marker>
+  </div>
+  <app-map-bound [locations]="locations"></app-map-bound>
+</sebm-google-map>

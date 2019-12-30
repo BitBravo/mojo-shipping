@@ -1,0 +1,50 @@
+.location-map {
+    margin-bottom: 15px;
+}
+
+/*fix dropdown selector appearance*/
+.btn + .dropdown-menu {
+    min-width: 100%;
+}
+
+.btn + .dropdown-menu .dropdown-item {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.custm_map {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.fixedContainer {
+  max-height:58vh;
+  overflow-x:auto;
+}
+
+/* Mobile view */
+@media (max-width: 576px) {
+    .location-map{
+        display:none;
+    }
+	.fixedContainer {
+	  max-height:77vh;
+	  overflow-x:auto;
+    }
+    .mobile_fixedContainer{
+        margin-top:1em;
+    }
+
+    .locationPrompt{
+        display: block;
+        margin-top:1em;
+    }
+}
+
+/* All other devices */
+@media (min-width: 576px) {
+    .locationPrompt{
+        
+        display:none;
+    }
+}
+

@@ -1,0 +1,220 @@
+<form method="POST" id="payment-form" #formCtrl="ngForm">
+  <div class="container mobile_payment_sec">
+    <div class="Form"> 
+      <div>
+        <ngb-accordion activeIds="order-panel" class="col-xs-12">
+          <ngb-panel title="Pickup Details" id="order-panel" *ngIf="deliveryOrder!=undefined && deliveryOrder.isPickedOrDelivery==true">
+            <ng-template ngbPanelContent>
+              <div class="row">
+                <div class="col-6">
+                  <strong>{{globalScopeService.PICKUP_LOCATION_NAME}}</strong>
+                  <p>{{globalScopeService.PICKUP_ADDRESS}}
+                  <p>
+                  <p><i>Pick up at {{globalScopeService.PICKUP_TIME | date: 'short'}}</i></p>
+                </div>
+                <div class="col-6" *ngIf="globalScopeService.PICKUP_LATITUDE && globalScopeService.PICKUP_LONGITUDE">
+                  <sebm-google-map
+                    scrollwheel="false" [zoom]="10"
+                    [latitude]="globalScopeService.PICKUP_LATITUDE"
+                    [longitude]="globalScopeService.PICKUP_LONGITUDE">
+
+                    <sebm-google-map-marker
+                      [latitude]="globalScopeService.PICKUP_LATITUDE"
+                      [longitude]="globalScopeService.PICKUP_LONGITUDE"
+                      [draggable]="false">
+                    </sebm-google-map-marker>
+                  </sebm-google-map>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+
+          <ngb-panel title="Delivery Details" id="order-panel" *ngIf="deliveryOrder!=undefined && deliveryOrder.isPickedOrDelivery==false">
+            <ng-template ngbPanelContent>
+              <div class="row">
+                <div class="col-6">
+                  <p>{{globalScopeService.DELIVERY_ADDRESS}}</p>
+                  <p>Apartment Number: {{deliveryOrder.apartmentNumber}}</p>
+                  <p>Additional Instruction: {{deliveryOrder.additionalInstruction}}</p>
+                  <p><i>To be delivered by {{globalScopeService.PICKUP_TIME | date: 'short'}}</i></p>
+                </div>
+                <div class="col-6" *ngIf="globalScopeService.DELIVERY_LATITUDE && globalScopeService.DELIVERY_LONGITUDE">
+                  <sebm-google-map
+                    scrollwheel="false" [zoom]="10"
+                    [latitude]="globalScopeService.DELIVERY_LATITUDE"
+                    [longitude]="globalScopeService.DELIVERY_LONGITUDE">
+
+                    <sebm-google-map-marker
+                      [latitude]="globalScopeService.DELIVERY_LATITUDE"
+                      [longitude]="globalScopeService.DELIVERY_LONGITUDE"
+                      [draggable]="false">
+                    </sebm-google-map-marker>
+                  </sebm-google-map>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+
+        </ngb-accordion>
+      </div>
+      <div class="">
+        <ngb-accordion activeIds="contact-panel" class="col-12">
+          <ngb-panel title="Contact Info" id="contact-panel">
+            <ng-template ngbPanelContent>
+              <div class="row">
+                <div class="form-group required col-12">
+                  <label class="label" for="name">Enter your name</label>
+                  <input type="text" class="form-control" id="name" pattern="^[a-zA-Z ]*$"
+                        placeholder="your name (mandatory)" [(ngModel)]="order.customerName" name="name" #name="ngModel" required>
+                </div>
+                <div class="form-group required col-12">
+                  <label class="label" for="mobilenumber">Enter your mobile number and we will text you when it is ready</label>
+                  <input [ngModel]="order.customerPhone | phoneNumberPipe" (ngModelChange)="order.customerPhone=$event" [minlength]="14" [maxlength]="14"
+                  id="mobilenumber" class="form-control remove-border-mobile-number" placeholder="(999) 999-9999  (mandatory)"  
+                  name="mobilenumber" aria-describedby="mobilehelp" required (keypress)="eventHandler($event)">
+                  
+                <small id="mobilehelp" class="form-text text-muted">Do not worry. We will not share this info with anyone else.</small>
+
+                </div> 
+                <div class="form-group col-12">
+                  <label for="email">Need a receipt? No worries. Just enter your email below and we will email it to you.</label>
+                  <input type="email" class="form-control" id="email" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+                        placeholder="contact@email.com (optional)" [(ngModel)]="order.emailAddress" name="email">
+                </div>
+            </div>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+
+      <div class="payment_sec">
+        <ngb-accordion  *ngIf="paymentGateway.showEmbedPayForm" activeIds="payment-panel" class="col-12 col-xs-12">
+          <ngb-panel title="Payment Details" id="payment-panel">
+            <ng-template ngbPanelContent>
+              <div  class="row custm_payment">
+
+                <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="form-group required col-8">
+                  <label class="label" for="cardnumber">Card Number</label>
+                  <input class="form-control" id="cardnumber" aria-describedby="cardhelp"
+                         placeholder="Card Number" [ngModel]="cardNumber| cardNumberPipe" [minlength]="18" [maxlength]="19"
+                         (ngModelChange)="cardNumber=$event" name="cardnumber" required (keypress)="eventHandler($event)">        
+                  <small id="cardhelp" class="form-text text-muted">We'll never share your card number with anyone else.</small>
+                </div>
+
+                <div *ngIf="globalScopeService.payInfo[0].providerId =='TSYS'" class="form-group required col-8">
+                  <label class="label" for="cardnumber">Card Number</label>
+                  <input class="form-control" id="tsep-cardNum" aria-describedby="cardhelp"
+                  placeholder="Card Number" [ngModel]="cardNumber" [minlength]="16" [maxlength]="16"
+                  name="cardnumber" required (keypress)="eventHandler($event)">       
+                  <small id="cardhelp" class="form-text text-muted">We'll never share your card number with anyone else.</small>
+                </div>
+
+                <div class="form-group required col-4">
+                  <label class="label" for="cvv">CVV Number</label>
+                  <input type="number" class="form-control" id="tsep-cvv2"
+                    placeholder="CVV" [(ngModel)]="cardCVV" name="cvv" [minlength]="3" [maxlength]="4" pattern="^[0-9]{3,4}$" required (keypress)="eventHandler($event)"> 
+                </div>     
+
+                <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="form-group required col-4">
+                  <label class="label" for="month">Expiry Month</label>
+                  <input type="number" class="form-control" id="month"
+                        placeholder="MM" [(ngModel)]="cardMonth" name="month" [min]="1" [max]="12" [minlength]="1" [maxlength]="2" pattern="^\d{1,2}$" required (keypress)="eventHandler($event)">
+                </div>
+
+                <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="form-group required col-4 expiry_year">
+                  <label class="label" for="year">Expiry Year</label>
+                  <input type="number" class="form-control" id="year"
+                        placeholder="YYYY" [(ngModel)]="cardYear" [minlength]="4" [maxlength]="4" pattern="^[0-9]{4}$" name="year" required (keypress)="eventHandler($event)">
+                </div>     
+
+                <div *ngIf="globalScopeService.payInfo[0].providerId =='TSYS'" class="form-group required col-8">
+                  <label class="label" for="month">Expiry Month/Year</label>
+                  <input type="number" class="form-control" id="tsep-datepicker"
+                  placeholder="MM/YYYY" [(ngModel)]="cardYear" [minlength]="7" [maxlength]="7" name="monthyear" required (keypress)="eventHandler($event)">
+                </div> 
+
+                <div class="form-group required col-4">
+                  <label class="label" for="zipCode">Billing ZIP</label>
+                  <input type="number" class="form-control" id="zipCode"
+                    placeholder="Zip Code" [(ngModel)]="zipCode" name="zipCode" [minlength]="4" pattern="^[0-9]{5}$" required (keypress)="eventHandler($event)">
+                </div>         
+
+              <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="checkbox custm-margin col-12 payment_custm_check_box" [style.display]="globalScopeService.AGE_VERIFICATION==true?'block':'none'">
+                  <label>
+                    <input type="checkbox" name="checkBox" [(ngModel)]="isVerified" (change)="resetErrorMessage()" #cb>
+                        <span class="checkbox-btn"></span>
+                        I am 21 years of age or older, and have read and accept the <a target="_blank" href="/tandc.htm" class="tandc"> terms & conditions</a>      
+                  </label>                 
+              </div>
+
+              <div *ngIf="globalScopeService.payInfo[0].providerId =='TSYS'" class="checkbox custm-margin col-12 payment_custm_check_box" [style.display]="globalScopeService.AGE_VERIFICATION==true?'block':'none'">
+                <label>
+                  <input type="checkbox" name="checkBox" [(ngModel)]="isVerified" (change)="resetErrorMessage(); validateButton(cb)" #cb>
+                      <span class="checkbox-btn"></span>
+                      I am 21 years of age or older, and have read and accept the <a target="_blank" href="/tandc.htm" class="tandc"> terms & conditions</a>      
+                </label>                 
+              </div>
+ 
+
+              <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="col-12" [style.display]="globalScopeService.AGE_VERIFICATION==false?'block':'none'">
+                  <label>
+                          By placing this order, I confirm that I have read and accept the <a target="_blank" href="/tandc.htm" class="tandc"> terms & conditions</a>
+                  </label> 
+              </div>
+
+              <div *ngIf="globalScopeService.payInfo[0].providerId =='TSYS'" class="checkbox custm-margin col-12 payment_custm_check_box" [style.display]="globalScopeService.AGE_VERIFICATION==false?'block':'none'">
+                  <label>
+                      <input type="checkbox" name="checkBox" [checked]="isChecked" (change)="validateButton(cbox)" #cbox>
+                          <span class="checkbox-btn"></span>
+                            By placing this order, I confirm that I have read and accept the <a target="_blank" href="/tandc.htm" class="tandc"> terms & conditions</a>
+                  </label> 
+              </div>
+
+              <div *ngIf="errorMessage" class="alert alert-danger col-12">
+                  {{errorMessage}}
+              </div>
+
+            </div>
+            
+          </ng-template>    
+          </ngb-panel>
+          
+        </ngb-accordion>
+      <div *ngIf="globalScopeService.payInfo[0].providerId !='TSYS'" class="col-12 custm_pay_btn">
+          <button class="btn btn-outline-primary btn-block" id="payNowBtn"
+              [disabled]="!formCtrl.form.valid"
+                  (click)="doCheckOut()">PAY NOW   
+            ({{globalScopeService.grandTotalCalculateWithTip()|currency:globalScopeService.isoCurrency:true:'1.2-2'}})
+          </button>
+        </div>
+
+        <div *ngIf="globalScopeService.payInfo[0].providerId =='TSYS'" class="col-12 custm_pay_btn">
+          <button class="btn btn-outline-primary btn-block" id="tsysGatewayButton"
+              [disabled]="!formCtrl.form.valid || token==false"
+                  (click)="doCheckOut()">PAY NOW   
+            ({{globalScopeService.grandTotalCalculateWithTip()|currency:globalScopeService.isoCurrency:true:'1.2-2'}})
+          </button>
+        </div>
+
+      </div>
+      <app-loading *ngIf="loading"></app-loading>
+    </div>
+
+    <ng-template #errorMessagePopup let-a="dismiss">
+      <div class="modal-header">
+          <h4 class="modal-title">Error Message
+          <button type="button" class="close" aria-label="Close" (click)="a('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h4>
+        </div>
+    <div class="modal-body">
+      <p>{{errorMsg}}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-primary" (click)="a('Cancel click')">OK</button>
+    </div>
+    </ng-template> 
+
+  </div>   
+ </form> 

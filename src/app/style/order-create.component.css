@@ -1,0 +1,14 @@
+p.outer-sec-text {
+    text-align: left;
+    font-style: italic;
+    color: #736464;
+    margin-bottom:5px;
+}
+span.inner-msg-text {
+    font-weight: 700;
+    /*color: #646769;*/
+    font-style: normal;
+}
+.success-icon {
+    margin-bottom: 30px;
+}

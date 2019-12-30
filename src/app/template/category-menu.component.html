@@ -1,0 +1,352 @@
+        <app-loading *ngIf="loading"></app-loading>
+         
+          <div class="container">
+              <div class="search_bar">
+                <input type="text" placeholder="Search Here" class="form-control" id="search" #textbox [(ngModel)]="searchText" (keyup)="resetSearch(textbox.value)" (keyup.enter)="search(textbox.value)" (blur)="search(textbox.value)">        
+                <button type="button" class="search_icon" (click)="search(textbox.value)"><i class="fa fa-search" aria-hidden="true"></i></button>
+                <button *ngIf="searchText!=''" type="button" class="ClrBtn" (click)="clearSearch()"><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+            <br/>
+
+                <div class=" container outer_div_sec">
+                  <div class="outer_one">
+                        <div class="outer_two">
+                          <button class="custm_item_btn_one item_btn" [style.display]="curPage==1?'none':'block'" (click)="decrement()">    
+                            <i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                          <button class="custm_item_btn_two item_btn" [style.display]="category.menuItems.length<pageSize?'none':'block'" (click)="increment()">
+                            <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                <div class=" slideInLeft"><h2 class="text-center">{{category.name}}</h2>
+                    
+            <div class="menu_item_outer_custm" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
+               
+                <div *ngIf="loading"><h2>Please wait. Loading...</h2></div>
+
+                    <div  *ngIf="category.menuItems && category.menuItems.length > 0" class="list-group custm_list_group" [ngClass]="sliderclass">
+
+                    <div class="list-group-item menu-list-item clearfix col-sm-6 custm_list-group-item" *ngFor="let menuItem of category.menuItems">
+                        <div class="row">
+                            <div *ngIf="menuItem.picture" class="media col-12">
+                                <figure class="pull-md-left custm-img">
+                                    <img class="media-object img-rounded img-responsive" src="{{menuItem.picture}}" style="height:100px">
+                                </figure>
+                            </div>
+                            <!-- The DIV below is shown as a placeholder when there is no picture for col-sm or higher -->
+                            <div *ngIf="!menuItem.picture" class="media hidden-xs-down col-12">
+                                <figure class="pull-md-left custm-img">
+                                    <img class="media-object img-rounded img-responsive" src="{{menuItem.picture}}" style="height:100px">
+                                </figure>
+                            </div>
+                            <div class="menu-list-describe col-12 text-center">
+                                <h4 class="list-group-item-heading">{{menuItem.name}}</h4>
+                                <p class="list-group-item-text">{{menuItem.description}}</p>
+                            </div>
+                            <div class="col-12 text-center">
+                                <div *ngFor="let price of menuItem.prices">
+                                    <small *ngIf="price.text">{{price.text}} : {{price.price| currency:globalScopeService.isoCurrency:true:'1.2-2'}}</small>
+                                    <small *ngIf="!price.text">{{price.price| currency:globalScopeService.isoCurrency:true:'1.2-2'}}</small>
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="menu-list-btn col-12">
+                                <button type="button" class="btn btn-outline-primary btn-md custm_add_responsive" [style.display]="readOnly||menuItem.status==86?'none':'block'" (click)="open(menuItem,content)">ADD
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="menuItem.status==86 && !readOnly">
+                            <div class="alert alert-info menuItemStatus custm_menuItemStatus">
+                                Sorry, we've temporarily run out of this item.
+                            </div>
+                        </div>
+                    </div>			
+                </div>
+            </div>
+
+                <!-- <span name="items"> -->
+                <span *ngIf="(!category.menuItems || category.menuItems.length == 0) && (isMenuItem && !loading)">
+                    <div (click)="loadMenuItemsForCategory(category)">No items found. Click here to try again.
+                        <i style=" vertical-align: middle;" class="fa fa-cloud-download fa-2x" aria-hidden="true"></i>
+                        <span class="sr-only">No items found. Click here to try again.</span>
+                    </div>
+                </span> 
+            </div>
+
+
+
+             <div class="col-12 order custm_order" [ngClass]="{'orderViewActive': globalScopeService.getCartState, 'orderViewInactive': !globalScopeService.getCartState }">
+                    <ngb-accordion #orderAccordion activeIds="yourOrder" (panelChange)="onOrderPanelChange($event)">
+                        <ngb-panel id="yourOrder">
+                            <ng-template ngbPanelTitle>
+                                <span class="btn btn-outline-primary" *ngIf="!globalScopeService.getCartState">View My Order</span>
+                                <span class="btn btn-outline-primary" *ngIf="globalScopeService.getCartState">Add To My Order</span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                    <div class="test col-12">
+                                            <perfect-scrollbar class="box-container-yourorder">
+                                <div class="lead" *ngIf="orderCalcResponse.items==null || orderCalcResponse.items.length<1">No items added</div>
+                                <div *ngIf="orderCalcResponse.items && orderCalcResponse.items.length>0">
+                                    <div *ngFor="let item of orderCalcResponse.items">
+        
+                                            <div class="row">
+                                                <div class="col-6 col-md-3 responsive_delete_sec">
+                                                   <p class="item_delete_ship"><i class="fa fa-trash-o fa-lg  custm_pull" aria-hidden="true" (click)="deleteItem(item)"></i>
+                                                    {{item.qty}} x {{item.verifiedPrice | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</p> 
+                                                </div>
+
+
+                                                <div class="col-6 col-md-6">
+                                                    <p class="col-xs-5"><b>{{item.name}}</b>
+                                                        <br *ngIf="item.verifiedPriceText">
+                                                        <small>{{item.verifiedPriceText}}</small>
+                                                        <br>
+                                                        <small *ngFor="let option of item.options;let i = index;let end = last;" class="strike-{{option.removed}}" style="display:inline">
+                                                            <i>{{option.name}}</i>
+                                                            <i *ngIf="option.price!=0 && (!option.isDefault || option.qty>1)">
+                                                                &nbsp;({{option.qty-(option.isDefault?1:0)}} x {{option.price * item.qty | currency:globalScopeService.isoCurrency:true:'1.2-2'}})
+                                                            </i>
+                                                            <i *ngFor="let optionProperty of option.optionProperties">
+                                                                    <strong>&nbsp;{{optionProperty.description}}</strong>
+                                                            </i>
+                                                            <i *ngIf="!end">,</i>
+        
+                                                    </small> 
+        
+                                                    </p>
+                                                </div>
+                                                <div class="col-6 col-md-3">
+                                                    <p class="col-xs-4 pull-right">{{item.verifiedItemTotal * item.qty | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</p>
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                        <!-- <div class="tabbable-line">
+                                        </div> -->
+        
+                                    </div>
+                                </perfect-scrollbar> 
+                                
+                             <div *ngIf="orderCalcResponse.items && orderCalcResponse.items.length>0">
+                                <div class="outer_custm_sec_fixed" [ngClass]="{'custm_fixed': globalScopeService.getCartState }">
+                                 <div class="custm_total_outer">
+                                    <div class="row custm_total_amount">
+                                        <p class="col-6 col-md-9">Sub-Total : </p>
+                                        <p class="col-6 col-md-3 text-right">{{orderCalcResponse.amount | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</p>
+                                        <p *ngIf="order!=undefined&&order.isPickedOrDelivery==false" class="col-6 col-md-9">Delivery Cost : </p>
+                                        <p *ngIf="order!=undefined&&order.isPickedOrDelivery==false" class="col-6 col-md-3 text-right">{{order.deliveryCost | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</p>
+                                    </div>
+    
+    
+                                    <div class="row custm_total_amount">
+                                        <p class="col-6 col-md-9">Total Tax : </p>
+                                        <p class="col-6 col-md-3 text-right">{{taxTotalCalculate | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</p>
+                                    </div>
+    
+    
+                                    <div class="row">
+                                        <p class="col-6 col-md-9"><b>Total Amount : </b></p>
+                                        <p class="col-6 col-md-3 text-right"><b>{{grandTotalCalculate | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</b>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                        <button type="button" class="btn btn-outline-primary btn-md btn-block checkOutBtn" (click)="openTipPopup()">
+                                                CHECKOUT ({{grandTotalCalculate | currency:globalScopeService.isoCurrency:true:'1.2-2'}})
+                                        </button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+        
+                </div>
+            </div>
+
+
+                <ng-template #tipPopup let-c="close" let-a="dismiss">
+                    <div class="modal-header mobile_model_outer">
+                            <h4 class="modal-title">
+                                Would you like to leave a tip?
+                               
+                                <button type="button" class="close custm_close" aria-label="Close" (click)="a('Cross click')">
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h4>
+                          </div>
+                          <perfect-scrollbar class="box-container_tips">		  
+                <div class="modal-body">
+                    <ul class="custm_tip">
+                        <li>
+                        <input type="radio" name="Tip" [(ngModel)]="order.tipAmount" [value]="calculateTipAmount(15)" (click)="setTip(15)">{{calculateTipAmount(15)  | currency:globalScopeService.isoCurrency:true:'1.2-2'}} (15%)
+                    </li>
+                    <li>
+                        <input type="radio" name="Tip" [(ngModel)]="order.tipAmount" [value]="calculateTipAmount(20)" (click)="setTip(20)">{{calculateTipAmount(20)  | currency:globalScopeService.isoCurrency:true:'1.2-2'}} (20%)
+                    </li>
+                    <li>
+                        <input type="radio" name="Tip" [(ngModel)]="order.tipAmount" [value]="calculateTipAmount(25)" (click)="setTip(25)">{{calculateTipAmount(25)  | currency:globalScopeService.isoCurrency:true:'1.2-2'}} (25%)
+                    </li>
+                    <li class="form-inline">
+                        <input type="radio" name="Tip" [value]="0.00" (click)="resetTipAmount(0)" #custom ngDefaultControl>Custom
+                        <input type="number" class="form-control custm_tip_" id="custom" *ngIf="custom.checked" (blur)="finalizeCustomTipAmount($event)" (ngModelChange)="setCustomTip($event)" [ngModel]="formattedtipAmount" (keyup.enter)="finalizeCustomTipAmount($event)">
+
+                        <!-- <input type="number" placeholder="0.00" class="form-control custm_tip_" id="custom" *ngIf="custom.checked" (ngModelChange)="order.tipAmount=$event" [ngModel]="order.tipAmount | currency:_globalScopeService.isoCurrency:true:'1.2-2'" (blur)="setCustomTip()"> -->
+                    </li>
+                    <li>
+                        <Input type="radio" name="Tip" [(ngModel)]="order.tipAmount" [value]="0" (click)="setTip(0)" ngDefaultControl>No Tip
+                        </li>
+                        </ul>
+                </div>
+            </perfect-scrollbar> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary btn-md btn-block checkOutBtn" (click)="checkout(); c('Close click');">
+                        CHECKOUT ({{globalScopeService.grandTotalCalculateWithTip() | currency:globalScopeService.isoCurrency:true:'1.2-2'}})
+                    </button>
+                </div>
+            </ng-template>
+
+
+
+            <ng-template ngbModalContainer></ng-template>
+            <ng-template #content let-c=" close" let-a="dismiss">
+                <div class="modal-header" id="menuItemPopupHeader">
+                    <h3 class="modal-title">{{selectedMenuItem.name}}
+                        <small class="lead"><p>{{selectedMenuItem.description}}</p></small>
+                    </h3>
+                    <span *ngIf="selectedOrderItem.options && selectedOrderItem.options.length>0"><strong>Includes:</strong>
+                          <span style="display:inline" *ngFor="let optionGroup of selectedMenuItem.optionGroups; let isLastGroup = last">
+                            <span *ngFor="let option of optionGroup.options | defaultOptionsFilter; let islastOption = last">
+                                  <span *ngIf="!OptionGroupNotAppliesToPricing(optionGroup)">
+                                    {{option.description}}
+                                    <span *ngIf="!islastOption">,</span>
+                                </span>
+                                <span *ngIf="islastOption===true && isLastGroup===false">,</span>
+                            </span>
+                        </span>
+                    </span>
+                </div>
+                <!-- <perfect-scrollbar class="box-container-inner"> -->
+                <div class="modal-body" id="menuItemPopupBody">
+                    <div class="row item-count-selector custm_item-count-selector">
+                        <div class="col-sm-8 col-md-8 item-selector custm_item-selector">
+                            <div *ngIf="selectedMenuItem.prices.length > 1" class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+                                <button class="btn btn-outline-primary" id="dropdownMenu" ngbDropdownToggle>
+                        {{selectedOrderItem.priceText}}
+                      </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    <div *ngFor="let price of selectedMenuItem.prices">
+                                        <button class="dropdown-item"
+                                         (click)="selectedOrderItem.priceText=price.text; ApplyDefaultOptions(); myDrop.close();">
+                            {{price.text}}
+                            <span *ngIf="price.text">-</span>
+                            {{price.price | currency:globalScopeService.isoCurrency:true:'1.2-2'}}
+                          </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedMenuItem.prices.length === 1">
+                                <div *ngFor="let singleprice of selectedMenuItem.prices">
+                                    <strong>{{singleprice.text}}
+                          <span *ngIf="singleprice.text">-</span>
+                          {{singleprice.price | currency:globalScopeService.isoCurrency:true:'1.2-2'}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4 custm_add_item">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                          <button type="button" class="btn btn-outline-primary" (click)="changeQuantity(false)">-</button>
+                      </span>
+                                <input readonly type="text" class="form-control input-number mojoQtyInput" [(ngModel)]="selectedOrderItem.qty">
+                                <span class="input-group-btn">
+                          <button type="button" class="btn btn-outline-primary" (click)="changeQuantity(true)">+</button>
+                      </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <perfect-scrollbar class="box-container-inner">
+                    <ngb-accordion *ngIf="selectedMenuItem.optionGroups&&selectedMenuItem.optionGroups.length>0" activeIds="customize">
+                    
+                        <ngb-panel title="Customize" id="customize">
+                                
+                            <ng-template ngbPanelContent>
+                                    <!-- <perfect-scrollbar class="box-container-inner"> -->
+                                        <div class="custm_customize">
+                                <ngb-tabset [activeId]="GetActiveTabId()" (tabChange)="handleTabChange($event,taby)" #taby >
+                                    <div *ngFor="let optionGroup of ListOfOptionGroupAppliesToPricing">
+                                        <ngb-tab title={{optionGroup.name}} [disabled]="OptionGroupNotAppliesToPricing(optionGroup)" id="tab-{{optionGroup.objectId}}">	
+                                            <ng-template ngbTabContent>
+                                             
+                                                <div class="option-wrap">
+                                                    <div class="checkbox custm-margin" *ngFor="let option of optionGroup.options">
+                                                        <label>
+                                                            <input
+                                                               [disabled]="OptionGroupNotAppliesToPricing(optionGroup)"
+                                                               type="checkbox"
+                                                               [checked]="isIncluded(optionGroup,option)"
+                                                               (change)="onOptionChange(cv.checked,option,optionGroup,null)"
+                                                               #cv>
+                                                                     <span class="checkbox-btn"></span>
+                                                               {{option.description}}
+                                                               -
+                                                               {{option.price | currency:globalScopeService.isoCurrency:true:'1.2-2'}}
+                                                            <div></div>
+                                                        </label>
+            
+                                                        <!--Qty Panel Addition-->
+                                                        <!--don't use *ngIf because it will throw undefined when accessing element value -->
+                                                        <div class="custm-spin pull-right" [style.display]="option.qtyEnabled && cv.checked?'block':'none'">
+                                                            <app-custom-spinner min="1"
+                                                             [value]="GetQuantityFromOrderItems(optionGroup,option,qtyInput.value)"
+                                                             (OnValueChange)="onOptionChange(cv.checked,option,optionGroup,qtyInput.value)"
+                                                             #qtyInput>
+                                                            </app-custom-spinner>
+                                                        </div>
+            
+                                                        <!--Property Panel Addition-->
+                                                        <div [style.display]="cv.checked?'block':'none'">
+                                                        <div class="propertyoption" *ngFor="let property of option.properties">
+                                                             <label>
+                                                                 <input type="checkbox" [checked]="isPropertyIncluded(optionGroup,option,property)"
+                                                                 (change)="onOptionChangeProperty(cp.checked,option,optionGroup,property)" #cp>
+                                                                 <span class="checkbox-btn"></span>{{property.description}}
+                                                             </label>
+                                                        </div>
+                                                        </div>
+            
+                                                    </div>
+                                                </div>
+                                              
+                                            </ng-template>
+                                        </ngb-tab>
+                                    </div>
+                                </ngb-tabset>
+                            </div>
+                              <!-- </perfect-scrollbar> -->
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+                </perfect-scrollbar>
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{errorMessage}}
+                    </div>
+            
+                </div>
+            <!-- </perfect-scrollbar> -->
+                <div class="modal-footer" id="menuItemPopupFooter">
+                    <button type="button" class="btn btn-secondary btn-cancel" (click)="a('Cancel click')">CANCEL</button>
+                     <button type="button" class="btn btn-outline-primary" [disabled]="errorMessage" (click)="c('Close click')">ADD TO ORDER</button>
+                </div>
+            </ng-template>
+
+
+            <ng-template #noticePeriodPopup let-clo="close">
+                <div class="modal-body">
+                    <p>{{modalMessage}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-OK" (click)="clo('')">OK</button>
+                </div>
+            </ng-template>

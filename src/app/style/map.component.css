@@ -1,0 +1,11 @@
+/*everything here is for mobile see media query below for larger then mobile*/
+
+.sebm-google-map-container {
+  height: 15vh;
+}
+
+@media (min-width: 576px) {
+	.sebm-google-map-container {
+	  height: 30vh;
+	}
+}

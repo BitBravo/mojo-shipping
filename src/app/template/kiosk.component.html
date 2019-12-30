@@ -1,0 +1,35 @@
+<app-loading *ngIf="loading"></app-loading>
+
+<ng-template ngbModalContainer></ng-template>
+<ng-template #receiptpopup let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <b>Do you want receipt ?</b>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="d('Close click')">No</button>
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Yes</button>
+  </div>
+</ng-template>
+
+<ng-template #emvReaderError let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <b>An error has occurred communicating with the EMV reader. Please try again</b>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-OK" (click)="d('Close click')">OK</button>
+  </div>
+</ng-template>
+
+<ng-template #emailpopup let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <label for="emailinput">Email</label>
+    <input type="email" class="form-control" id="emailinput" [(ngModel)]="email" aria-describedby="emailhelp"
+           name="email"
+           placeholder="customer@example.com">
+    <small id="emailhelp" class="form-text text-muted">The receipt will be sent on this email address
+    </small>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-OK" (click)="c('Close click')">OK</button>
+  </div>
+</ng-template>

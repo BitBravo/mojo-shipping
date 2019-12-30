@@ -1,0 +1,10 @@
+<div class="input-group">
+  <span class="input-group-btn">
+              <button type="button" class="btn btn-outline-primary btn-number"   (click)="decrement()" [disabled]="disabledMinus">-</button>
+          </span>
+  <input type="text" name="quant[1]" class="form-control input-number text-center"  min="min" max="max" 
+  [(ngModel)]="value" (change)="handleInputChange($event)" (keydown)="handleKeyDown($event)">
+  <span class="input-group-btn">
+              <button type="button" class="btn btn-outline-primary btn-number"  (click)="increment()" [disabled]="disabledPlus">+</button>
+          </span>
+</div>

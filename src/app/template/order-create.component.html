@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <div class="container">
+  <div class="row text-center">
+  <div class="col-sm-3"></div>
+    <div class="col-sm-6 " *ngIf="deliveryOrder!=undefined && deliveryOrder.isPickedOrDelivery==true">
+      <br><br>
+      <h2 class="success-icon" style="color:#0fad00; text-align:left;">
+        <img src="assets/img/check-true.jpg"/>Success</h2>
+      
+      <p class="outer-sec-text"><span class="inner-msg-text">Order Ticket : </span> {{message}}</p>
+      <p class="outer-sec-text"><span class="inner-msg-text">Grand Total : </span>{{globalScopeService.grandTotalCalculateWithTip()|currency:globalScopeService.isoCurrency:true:'1.2-2'}} </p>  
+      <!-- <p class="outer-sec-text"><span class="inner-msg-text">Pick up :</span> {{pickUpTime | date: 'EEE dd/MMM/yy hh:mm a'}}</p>       -->
+      <p class="outer-sec-text"><span class="inner-msg-text">Pick up :</span> {{pickUpTime | date: 'short'}}</p>      
+      <p class="outer-sec-text"><span class="inner-msg-text">Address :</span> {{address}}</p>
+      <p class="outer-sec-text">Your order has been placed and is awaiting acceptance.
+        If you provided a phone number, we will text you when it is ready for pickup.</p>
+      
+      <br><br>
+      <button type="button" class="btn btn-outline-primary btn-block" (click)="orderAgain()">Order Again
+      </button>
+     
+    </div>
+    <div class="col-sm-6 " *ngIf="deliveryOrder!=undefined && deliveryOrder.isPickedOrDelivery==false">
+      <br><br>
+      <h2 class="success-icon" style="color:#0fad00; text-align:left;">
+        <img src="assets/img/check-true.jpg"/>Success</h2>
+      
+      <p class="outer-sec-text"><span class="inner-msg-text">Order Ticket : </span> {{message}}</p>
+      <p class="outer-sec-text"><span class="inner-msg-text">Grand Total: </span>{{globalScopeService.grandTotalCalculateWithTip() |currency:globalScopeService.isoCurrency:true:'1.2-2'}} </p>  
+      <p class="outer-sec-text"><span class="inner-msg-text">Delivery Name :</span> {{name}}</p>
+      <p class="outer-sec-text"><span class="inner-msg-text">Delivery Apartment Number :</span> {{deliveryApartmentNumber}}</p> 
+      <p class="outer-sec-text"><span class="inner-msg-text">Delivery Address :</span> {{address}}</p>
+      <!-- <p class="outer-sec-text"><span class="inner-msg-text">Delivery Date/Time :</span> {{pickUpTime | date: 'EEE dd/MMM/yy hh:mm a'}}</p> -->
+      <p class="outer-sec-text"><span class="inner-msg-text">Delivery Date/Time :</span> {{pickUpTime | date: 'short'}}</p>
+      <p class="outer-sec-text"><span class="inner-msg-text">Delivery Comments :</span> {{deliveryComments}}</p>     
+      <p class="outer-sec-text">Your order has been placed and is awaiting acceptance.</p>
+      
+      <br><br>
+      <button type="button" class="btn btn-outline-primary btn-block" (click)="orderAgain()">Order Again</button>
+     
+    </div>
+	<div class="col-sm-3"></div>
+  </div>
+ </div> 
+</div>
+
+

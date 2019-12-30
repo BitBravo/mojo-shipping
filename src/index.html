@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Loading...</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  <!-- Hammer JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.js"></script>
+
+  <!-- <link rel="manifest" href="assets/script/manifest.json"> -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.15/css/perfect-scrollbar.min.css" />
+</head>
+<script>
+  function openNav() {
+    document.getElementById("order_container").style.height = "100%";
+  }
+
+  function closeNav() {
+    document.getElementById("order_container").style.height = "0%";
+  }
+
+  function tsepHandler(eventType, event){
+    console.log(event);
+    localStorage.setItem('Response', JSON.stringify(event));
+  }
+     
+</script>
+
+<body >
+<app-root></app-root>
+<!-- <script type="text/javascript" src="inline.bundle.js"></script>
+<script type="text/javascript" src="polyfills.bundle.js"></script>
+<script type="text/javascript" src="scripts.bundle.js"></script>
+<script type="text/javascript" src="styles.bundle.js"></script>
+<script type="text/javascript" src="vendor.bundle.js"></script>
+<script type="text/javascript" src="main.bundle.js"></script> -->
+</body>
+
+</html>

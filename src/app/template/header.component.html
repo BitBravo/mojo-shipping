@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <nav class="navbar navbar-light custm_head_sec navbar-fixed" style="background-color:#e3f2fd;">
+      <a class="navbar-brand" routerLink="/locationselection" skipLocationChange>
+        <h1>
+          <img src="{{_globalScopeService.VENDOR_LOGO_URL}}" class="vendorLogo" /> 
+          <span class="vendorName">{{_globalScopeService.VENDOR_NAME}}</span>
+        </h1>
+      </a>
+      <div class="go-back-btn">
+        <button (click)="goBack()" class="btn btn-outline-primary" [style.display]="showBack?'block':'none'" >
+            <i class="fa fa-angle-left"></i>&nbsp;Back</button>
+      </div>
+      <div class="shopping-cart-btn">
+          <button (click)="toggleOrder()" class="btn btn-outline-primary" [style.display]="showShoppingCart?'block':'none'">
+            <i class="fa fa-shopping-cart"></i>&nbsp;My Order {{grandTotalCalculate() | currency:_globalScopeService.isoCurrency:true:'1.2-2'}}
+          </button>
+      </div>
+      <div class="place-oder-btn-outer custm_place_order_btn">
+        <button type="button" class="btn btn-outline-primary place-oder-btn" [style.display]="showPlaceOrder?'block':'none'" (click)="orderMenu()">&nbsp;PLACE ORDER </button>
+      </div>
+    </nav>
+   </div>
+</div>
+<div id="main-pad-top"></div>

@@ -1,0 +1,104 @@
+a.list-group-item {
+  height: auto;
+  min-height: 125px;
+}
+
+.dropdown-menu {
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+.center {
+  text-align: center;
+}
+
+.sebm-google-map-container {
+  height: 150px;
+}
+
+/*location block*/
+.location-item {
+    margin-bottom: 10px;
+}
+
+.location-item.last{
+    margin-bottom:2em;
+}
+
+/*modal*/
+.modal-body h4 {
+    margin-bottom: 1rem;
+}
+
+/*fix dropdown selector appearance*/
+.btn + .dropdown-menu {
+    min-width: 100%;
+}
+
+.btn + .dropdown-menu .dropdown-item {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/*fix datapicker navigation appearance*/
+ngb-datepicker-navigation tr {
+    display: flex;
+    justify-content: space-between;
+}
+
+ngb-datepicker-navigation td:nth-child(2) {
+    flex-grow: 1;
+}
+.custm_inline{
+    display: inline-block;
+}
+
+.btn.custm_inline{
+    float: right;
+    margin-right: 35px;
+}
+.custm_date-inner .form-control[readonly] {
+    background: #fff;
+}
+
+
+/*media fixes*/
+@media (min-width: 576px) {
+    .form-inline .form-group {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .d-inline-block.dropdown {
+         margin-top:.5em;
+         margin-bottom:1em;
+    }
+}
+
+.custm-center {
+    width: 100%;
+    text-align: center;
+}
+.custm-margin{
+    margin: 0 auto;
+}
+
+.request_delivery {
+    padding: 15px;
+}
+.request_delivery_input {
+    margin-bottom: 10px;
+}
+
+#deliveryTab h4{
+    margin-bottom:-.15em;
+}
+.switchDeliveryToPickupPopupTitle{
+    color:white;
+}
+
+input.ng-dirty.custm_error {
+    border-color: #d9534f!important;
+    border-width: 2px;
+}

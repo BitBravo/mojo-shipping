@@ -1,0 +1,181 @@
+.checkbox .mojoQtyInput{
+  color:inherit;
+  background-color: inherit;
+  max-width: 33%;
+  border-color:transparent;
+}
+
+.checkbox .mojoOptionQtyDesc{
+  padding-left:2em;
+  padding-top:0.25em;
+}
+
+.checkOutBtn{
+  margin-bottom:1em;
+}
+
+.card-header > a::before{
+  content:none!important;
+}
+
+a.list-group-item {
+  height: 100px;
+}
+
+a.list-group-item.active small {
+  color: #fff;
+}
+
+.tabbable-line {
+  border: 1px solid #eee;
+  margin: 0px;
+}
+
+.strike-true {
+  text-decoration: line-through;
+  color: grey;
+}
+
+.container-fluid.menu {
+  max-width: 1200px;
+}
+
+:host >>> .container-fluid.menu .card {
+  border: none;
+}
+
+:host >>> .menu .card-header,
+:host >>> .menu .card-block {
+  margin: 0 -15px;
+}
+
+/* .option-wrap {
+  padding-top: .5rem;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: auto;
+} */
+
+.mojoQtyInput{
+  text-align:center;
+  background-color:transparent;
+}
+
+.orderViewInactive{
+  max-height:63px;
+  overflow:hidden !important;
+}
+
+.orderViewActive{
+  min-height:70vh;
+  overflow:auto;
+}
+
+.menu .order {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.125);
+  overflow: auto;
+}
+
+.item-count-selector {
+  margin-bottom: 1rem;
+}
+
+.item-selector {
+  margin-bottom: 1rem;
+}
+
+.menuItemStatus{
+  text-align: center;
+  width:100%;
+}
+
+:host >>> .tab-content{
+  max-height: 20vh;
+  overflow-y: auto;
+}
+
+:host >>> .order .card{
+  margin-bottom: 0;
+}
+
+@media (min-width: 576px) {
+  .item-selector {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .menu .media-object {
+    display: block;
+    margin: 0 auto;
+  }
+  .menu-list-item {
+    text-align: center;
+  }
+.option-wrap .propertyoption{
+    width: 100%;
+}
+}
+
+@media (min-width: 768px) {
+  .menu .media figure {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  /* .menu .menu-list-describe {
+    padding: 0;
+  } */
+  .menu .menu-list-btn {
+    text-align: right;
+  }
+  .menu .order {
+    min-width: 400px;
+  }
+  :host >>> .menu .card-header {
+    margin: 0;
+  }
+  :host >>> .menu .order .card-header {
+    margin: 0 -15px;
+  }
+}
+
+.list-group-item {
+    display: block;
+}
+
+app-menu .modal-body .card .card-header a {
+    background-color: rgb(28, 180, 173);
+}
+.propertyoption .checkbox-btn {
+    height: 25px;
+    width: 25px;
+}
+.propertyoption{
+    padding-left: 35px;
+    width: 49%;
+    float: left;
+}
+.checkbox.custm-margin {
+    clear: both;
+}
+.place-oder-btn {
+    background: #046ac1;
+    color: #fff;
+}
+.place-oder-btn:hover {
+    background: #11579c;
+}
+
+ngb-tabset > ul{
+  margin-bottom: 15px;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+

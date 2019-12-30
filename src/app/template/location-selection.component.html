@@ -1,0 +1,12 @@
+<div class="container-fluid custm_map">
+  <div class="location-map">
+    <app-map [locations]="locations" #map></app-map>
+  </div>
+  <div class="locationPrompt"><p class="h4 text-center">Select a location</p></div>
+  <div class="container mobile_fixedContainer">
+      <!-- <perfect-scrollbar class="box-container"> -->
+          <app-location-detail #detail [locations]="locations"
+                         (locationSelected)="map.onLocationSelected($event)"></app-location-detail>
+      <!-- </perfect-scrollbar> -->
+  </div>
+</div>
